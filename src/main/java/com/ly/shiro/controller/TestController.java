@@ -5,10 +5,12 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -26,7 +28,7 @@ public class TestController {
         return "hello";
     }
 
-    @PostMapping("/login")
+    @RequestMapping("/login")
     public String login(String username, String password){
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(username,password);
         Subject subject = SecurityUtils.getSubject();
@@ -45,4 +47,30 @@ public class TestController {
         return "登录成功";
 
     }
+
+    @GetMapping("/index")
+    public String index(){
+        return "首页";
+    }
+
+    @GetMapping("/admin")
+    @RequiresRoles("admin")
+    public String admin(){
+        return "admin";
+    }
+
+    @GetMapping("/user")
+    @RequiresRoles(value = {"admin","user"})
+    public String user(){
+        return "user";
+    }
+
+    @GetMapping("/root")
+    @RequiresRoles("root")
+    public String root(){
+        return "root";
+    }
+
+
+
 }
